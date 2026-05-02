@@ -1,7 +1,7 @@
 import { useState } from "react";
-import NoProjectImg from "./assets/no-projects.png";
 import NavBar from "./components/NavBar.react";
 import ProjectForm from "./components/ProjectForm.react";
+import EmptyProjectsList from "./components/EmptyProjectsList.react";
 import "./App.css";
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
 
   const projectScreenDisplay = () => {
     if (projects.length === 0 && !createOrUpdateProject)
-      return <img className="max-w-28" src={NoProjectImg} alt="Notepad and pencil" />;
+      return <EmptyProjectsList addProject={addProject} />;
 
     return createOrUpdateProject === true ? (
       <ProjectForm saveProject={saveProject} />
