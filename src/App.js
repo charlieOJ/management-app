@@ -1,23 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import NoProjectImg from "./assets/no-projects.png";
+import NavBar from "./components/NavBar.react";
+import "./App.css";
 
 function App() {
+  const [projects, setProjects] = useState([]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="flex bg-white text-gray-800">
+      <NavBar />
+
+      <div className="flex min-h-screen flex-1 flex-col max-w-max ml-16 md:ml-64">
+        {projects.length === 0 ? (
+          <img className="max-w-28" src={NoProjectImg} alt="Notepad and pencil" />
+        ) : (
+          <p>I have projects !</p>
+        )}
+      </div>
     </div>
   );
 }
