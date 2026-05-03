@@ -1,6 +1,7 @@
 import { useState } from "react";
 import NavBar from "./components/NavBar.react";
 import ProjectForm from "./components/ProjectForm.react";
+import ProjectShow from "./components/ProjectShow.react";
 import EmptyProjectsList from "./components/EmptyProjectsList.react";
 import "./App.css";
 
@@ -34,6 +35,14 @@ function App() {
     });
   };
 
+  const editProject = () => {
+    setCreateOrUpdateProject(true);
+  };
+
+  const deleteProject = project => {
+    delete projects[selectedProjectId];
+    setSelectedProjectId(null);
+    setProjects({ ...projects });
   };
 
   const projectScreenDisplay = () => {
@@ -47,7 +56,11 @@ function App() {
         project={projects[projectId()]}
       />
     ) : (
-      <p>I have projects !</p>
+      <ProjectShow
+        project={projects[selectedProjectId]}
+        deleteProject={deleteProject}
+        editProject={editProject}
+      />
     );
   };
 
