@@ -1,30 +1,66 @@
 import { useState } from "react";
-import NoProjectImg from "./assets/no-projects.png";
 import NavBar from "./components/NavBar.react";
 import ProjectForm from "./components/ProjectForm.react";
+import ProjectShow from "./components/ProjectShow.react";
+import EmptyProjectsList from "./components/EmptyProjectsList.react";
 import "./App.css";
 
 function App() {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState({});
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [createOrUpdateProject, setCreateOrUpdateProject] = useState(false);
+
+  const projectId = (project = null) => {
+    if (project) return Object.keys(project)[0];
+
+    if (selectedProjectId) return selectedProjectId;
+
+    let newId = Math.floor(Math.random() * 1000);
+    while (Object.keys(projects).includes(newId)) {
+      newId = Math.floor(Math.random() * 1000);
+    }
+    return newId;
+  };
 
   const addProject = () => {
     setCreateOrUpdateProject(true);
   };
 
-  const saveProject = ({ title, description, dueDate }) => {
+  const saveProject = project => {
     setCreateOrUpdateProject(false);
-    setProjects([...projects, { title, description, dueDate }]);
+    const currentProjectId = projectId(project);
+    setSelectedProjectId(currentProjectId);
+    setProjects(prevProjects => {
+      return { ...prevProjects, [currentProjectId]: Object.values(project)[0] };
+    });
+  };
+
+  const editProject = () => {
+    setCreateOrUpdateProject(true);
+  };
+
+  const deleteProject = () => {
+    delete projects[selectedProjectId];
+    setSelectedProjectId(null);
+    setProjects({ ...projects });
   };
 
   const projectScreenDisplay = () => {
-    if (projects.length === 0 && !createOrUpdateProject)
-      return <img className="max-w-28" src={NoProjectImg} alt="Notepad and pencil" />;
+    if (Object.keys(projects).length === 0 && !createOrUpdateProject)
+      return <EmptyProjectsList addProject={addProject} />;
 
     return createOrUpdateProject === true ? (
-      <ProjectForm saveProject={saveProject} />
+      <ProjectForm
+        saveProject={saveProject}
+        projectId={projectId()}
+        project={projects[projectId()]}
+      />
     ) : (
-      <p>I have projects !</p>
+      <ProjectShow
+        project={projects[selectedProjectId]}
+        deleteProject={deleteProject}
+        editProject={editProject}
+      />
     );
   };
 

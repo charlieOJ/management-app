@@ -1,17 +1,18 @@
 import { useState } from "react";
 
-const ProjectForm = ({ saveProject }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [dueDate, setDueDate] = useState("");
+const ProjectForm = ({ project, projectId, saveProject }) => {
+  const [title, setTitle] = useState(project?.title || "");
+  const [description, setDescription] = useState(project?.description || "");
+  const [dueDate, setDueDate] = useState(project?.dueDate || "");
 
   const handleSubmit = e => {
     e.preventDefault();
-    saveProject({ title, description, dueDate });
+    saveProject({ [projectId]: { title, description, dueDate } });
   };
 
   return (
     <form className="grid grid-cols-1 gap-6" onSubmit={handleSubmit}>
+      <input type="hidden" value={projectId} />
       <div className="block">
         <label htmlFor="title">Title</label>
         <input
