@@ -39,7 +39,7 @@ function App() {
     setCreateOrUpdateProject(true);
   };
 
-  const deleteProject = project => {
+  const deleteProject = () => {
     delete projects[selectedProjectId];
     setSelectedProjectId(null);
     setProjects({ ...projects });
