@@ -1,4 +1,4 @@
-const NavBar = ({ projects, addProject }) => {
+const NavBar = ({ projects, addProject, updateSelectedProjectId }) => {
   const projectsList = () => {
     if (Object.keys(projects).length === 0) return null;
 
@@ -11,7 +11,11 @@ const NavBar = ({ projects, addProject }) => {
       <ul className="mt-5">
         {projectsArray.map((project, index) => {
           return (
-            <li key={index} className="py-2 border-t border-gray-700">
+            <li
+              key={index}
+              onClick={() => updateSelectedProjectId(project.id)}
+              className="py-2 border-t border-gray-700 cursor-pointer hover:underline"
+            >
               {project.title}
             </li>
           );
