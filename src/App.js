@@ -23,7 +23,13 @@ function App() {
   };
 
   const addProject = () => {
+    setSelectedProjectId(null);
     setCreateOrUpdateProject(true);
+  };
+
+  const onSelectProject = id => {
+    setSelectedProjectId(id);
+    setCreateOrUpdateProject(false);
   };
 
   const saveProject = project => {
@@ -41,8 +47,9 @@ function App() {
 
   const deleteProject = () => {
     delete projects[selectedProjectId];
-    setSelectedProjectId(null);
     setProjects({ ...projects });
+    setCreateOrUpdateProject(false);
+    setSelectedProjectId(Object.keys(projects)[0] || null);
   };
 
   const projectScreenDisplay = () => {
@@ -66,7 +73,11 @@ function App() {
 
   return (
     <div className="grid grid-cols-4 gap-x-0 bg-white text-gray-800">
-      <NavBar projects={projects} addProject={addProject} />
+      <NavBar
+        projects={projects}
+        addProject={addProject}
+        updateSelectedProjectId={onSelectProject}
+      />
 
       <div className="col-span-3 min-h-screen container mx-auto px-5">{projectScreenDisplay()}</div>
     </div>
