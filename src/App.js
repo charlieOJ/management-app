@@ -22,6 +22,20 @@ function App() {
     return newId;
   };
 
+  const taskId = (task = null) => {
+    if (task) return task.id;
+
+    let newId = Math.floor(Math.random() * 1000);
+    const currentProject = projects[selectedProjectId];
+    const taskIds = Object.keys(currentProject).includes("tasks")
+      ? currentProject["tasks"].map(t => t.id)
+      : [];
+    while (taskIds.includes(newId)) {
+      newId = Math.floor(Math.random() * 1000);
+    }
+    return newId;
+  };
+
   const addProject = () => {
     setSelectedProjectId(null);
     setCreateOrUpdateProject(true);
@@ -46,10 +60,37 @@ function App() {
   };
 
   const deleteProject = () => {
-    delete projects[selectedProjectId];
-    setProjects({ ...projects });
+    const updatedProjects = { ...projects };
+    delete updatedProjects[selectedProjectId];
+    setProjects(updatedProjects);
     setCreateOrUpdateProject(false);
-    setSelectedProjectId(Object.keys(projects)[0] || null);
+    setSelectedProjectId(Object.keys(updatedProjects)[0] || null);
+  };
+
+  const addTask = task => {
+    const project = projects[selectedProjectId];
+    const projectTasks = project["tasks"] || [];
+    const existingTask = !!projectTasks.find(t => t.id === task.id);
+    let updatedTasks;
+
+    if (existingTask) {
+      updatedTasks = projectTasks.map(t => (t.id === task.id ? task : t));
+    } else {
+      updatedTasks = [...projectTasks, task];
+    }
+
+    setProjects(prevProjects => {
+      return { ...prevProjects, [selectedProjectId]: { ...project, tasks: updatedTasks } };
+    });
+  };
+
+  const deleteTask = taskId => {
+    const project = projects[selectedProjectId];
+    const newTasks = project["tasks"].filter(t => t.id !== taskId);
+
+    setProjects(prevProjects => {
+      return { ...prevProjects, [selectedProjectId]: { ...project, tasks: newTasks } };
+    });
   };
 
   const projectScreenDisplay = () => {
@@ -67,6 +108,9 @@ function App() {
         project={projects[selectedProjectId]}
         deleteProject={deleteProject}
         editProject={editProject}
+        taskId={taskId()}
+        addTask={addTask}
+        deleteTask={deleteTask}
       />
     );
   };
@@ -79,7 +123,9 @@ function App() {
         updateSelectedProjectId={onSelectProject}
       />
 
-      <div className="col-span-3 min-h-screen container mx-auto px-5">{projectScreenDisplay()}</div>
+      <div className="col-span-3 min-h-screen container mx-auto my-5 px-5">
+        {projectScreenDisplay()}
+      </div>
     </div>
   );
 }
