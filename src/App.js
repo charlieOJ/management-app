@@ -115,17 +115,38 @@ function App() {
     );
   };
 
-  return (
-    <div className="grid grid-cols-4 gap-x-0 bg-white text-gray-800">
-      <NavBar
-        projects={projects}
-        addProject={addProject}
-        updateSelectedProjectId={onSelectProject}
-      />
+  const projectsList = () => {
+    if (Object.keys(projects).length === 0) return null;
 
-      <div className="col-span-3 min-h-screen container mx-auto my-5 px-5">
-        {projectScreenDisplay()}
-      </div>
+    const projectsArray = [];
+    for (let id in projects) {
+      projectsArray.push({ ...projects[id], id: id });
+    }
+
+    return (
+      <ul className="mt-5">
+        {projectsArray.map((project, index) => {
+          return (
+            <li
+              key={index}
+              onClick={() => onSelectProject(project.id)}
+              className="py-2 border-t border-gray-700 cursor-pointer hover:underline"
+            >
+              {project.title}
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
+
+  return (
+    <div className="flex bg-white text-gray-800">
+      <NavBar projects={projects} addProject={addProject}>
+        {projectsList()}
+      </NavBar>
+
+      <div className="w-2/3 min-h-screen container mx-auto my-5 px-5">{projectScreenDisplay()}</div>
     </div>
   );
 }
