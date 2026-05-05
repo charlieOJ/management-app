@@ -1,31 +1,6 @@
-const NavBar = ({ projects, addProject, updateSelectedProjectId }) => {
-  const projectsList = () => {
-    if (Object.keys(projects).length === 0) return null;
-
-    const projectsArray = [];
-    for (let id in projects) {
-      projectsArray.push({ ...projects[id], id: id });
-    }
-
-    return (
-      <ul className="mt-5">
-        {projectsArray.map((project, index) => {
-          return (
-            <li
-              key={index}
-              onClick={() => updateSelectedProjectId(project.id)}
-              className="py-2 border-t border-gray-700 cursor-pointer hover:underline"
-            >
-              {project.title}
-            </li>
-          );
-        })}
-      </ul>
-    );
-  };
-
+const NavBar = ({ children, projects, addProject }) => {
   return (
-    <aside className="px-4 flex place-items-left flex-col max-h-screen min-h-screen overflow-hidden border-gray-700 bg-gray-900 text-slate-50">
+    <aside className="px-4 w-1/3 flex place-items-left flex-col max-h-screen min-h-screen overflow-hidden border-gray-700 bg-gray-900 text-slate-50">
       <h1 className="text-xl py-2 mt-5 mb-5">YOUR PROJECTS</h1>
 
       <button
@@ -35,7 +10,7 @@ const NavBar = ({ projects, addProject, updateSelectedProjectId }) => {
         + Add project
       </button>
 
-      {projectsList()}
+      {children}
     </aside>
   );
 };
